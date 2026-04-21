@@ -23,8 +23,8 @@
 ## 待完成任务
 
 ### 中优先级
-- [ ] 错误处理和异常统一响应
-- [ ] 请求参数校验
+- [x] 错误处理和异常统一响应
+- [x] 请求参数校验
 
 ### 低优先级
 - [ ] Docker容器化
@@ -53,6 +53,11 @@
 - `internal/engine/flow/simple_flow.go` - 中等用例决策流
 - `internal/engine/flow/complex_flow.go` - 复杂用例决策流
 - `internal/engine/flow/config.go` - 决策流配置文件加载器（YAML）
+
+### API 层
+- `internal/api/errors/errors.go` - 错误处理和统一响应
+- `internal/api/middleware/error_handler.go` - 错误处理中间件
+- `internal/api/validation/validation.go` - 请求参数校验
 
 ### 服务入口
 - `cmd/server/final_server.go` - 简单用例服务
