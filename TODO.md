@@ -15,14 +15,14 @@
 - ✅ 中等用例: 规则+模型联合决策 (01-rule-and-model)
 - ✅ 实现数据源接入接口
 - ✅ 复杂用例: 数据源+规则+模型 (01-datasource-rule-model)
+- ✅ 规则配置文件加载 (从YAML动态加载)
+- ✅ 配置管理 (Viper)
+- ✅ 日志系统 (Zap)
+- ✅ 决策流配置文件加载
 
 ## 待完成任务
 
 ### 中优先级
-- [ ] 配置管理 (Viper)
-- [ ] 日志系统 (Zap)
-- [ ] 规则配置文件加载
-- [ ] 决策流配置文件加载
 - [ ] 错误处理和异常统一响应
 - [ ] 请求参数校验
 
@@ -47,22 +47,27 @@
 
 ### 核心引擎
 - `internal/engine/rule/simple_rule.go` - 简化规则引擎（黑名单、年龄、收入、多头）
+- `internal/engine/rule/config.go` - 规则配置文件加载器（YAML）
 - `internal/engine/model/client.go` - 模型服务客户端
 - `internal/engine/datasource/client.go` - 数据源客户端
 - `internal/engine/flow/simple_flow.go` - 中等用例决策流
 - `internal/engine/flow/complex_flow.go` - 复杂用例决策流
+- `internal/engine/flow/config.go` - 决策流配置文件加载器（YAML）
 
 ### 服务入口
 - `cmd/server/final_server.go` - 简单用例服务
 - `cmd/server/medium_use_case_server.go` - 中等用例服务
 - `cmd/server/complex_use_case_server.go` - 复杂用例服务
+- `cmd/server/config_rule_server.go` - 配置规则服务（从YAML动态加载）
 
 ### 自测文件
 - `test/simple_age_rule_test.go` - 简单用例自测
 - `test_medium_flow.go` - 中等用例自测
 - `test_complex_flow.go` - 复杂用例自测
+- `test_config_rule.go` - 规则配置加载自测
+- `test_flow_config.go` - 决策流配置加载自测
 
 ## 技术债务
 - [ ] 规则引擎完整版需要重构 (当前使用简化版)
-- [ ] 需要从配置文件加载规则而非硬编码
+- [x] 需要从配置文件加载规则而非硬编码 (已实现)
 - [ ] extractAge函数需要更通用的数据提取方式

@@ -9,6 +9,8 @@
 ## 核心特性
 
 - 规则引擎：基于 expr 表达式引擎的灵活规则配置
+- 规则配置文件：支持 YAML 格式规则配置，动态加载无需硬编码
+- 决策流配置文件：支持 YAML 格式决策流配置，节点和边灵活定义
 - 模型服务集成：支持 HTTP 调用外部 ML 模型服务
 - 数据源接入：支持预加载多维度外部数据
 - 决策流编排：支持从简单到复杂的决策流程编排
@@ -34,13 +36,19 @@ risk-decision-engine/
 │   └── server/                # 服务器入口
 │       ├── final_server.go        # 简单用例服务
 │       ├── medium_use_case_server.go  # 中等用例服务
-│       └── complex_use_case_server.go # 复杂用例服务
+│       ├── complex_use_case_server.go # 复杂用例服务
+│       └── config_rule_server.go    # 配置规则服务（YAML动态加载）
 ├── internal/                  # 内部代码
 │   ├── engine/                # 决策引擎核心
 │   │   ├── rule/              # 规则引擎
+│   │   │   ├── simple_rule.go # 规则定义与执行
+│   │   │   └── config.go     # 规则配置加载器
 │   │   ├── model/             # 模型客户端
 │   │   ├── datasource/        # 数据源客户端
 │   │   ├── flow/              # 决策流引擎
+│   │   │   ├── simple_flow.go  # 中等用例决策流
+│   │   │   ├── complex_flow.go # 复杂用例决策流
+│   │   │   └── config.go      # 决策流配置加载器
 │   │   └── expression/        # 表达式引擎
 │   ├── api/                   # API 层
 │   │   ├── handler/
@@ -57,7 +65,9 @@ risk-decision-engine/
 │       └── complex/01-datasource-rule-model/
 ├── test_simple_age_rule_test.go    # 简单用例自测
 ├── test_medium_flow.go             # 中等用例自测
-└── test_complex_flow.go            # 复杂用例自测
+├── test_complex_flow.go            # 复杂用例自测
+├── test_config_rule.go             # 规则配置加载自测
+└── test_flow_config.go             # 决策流配置加载自测
 ```
 
 ## 用例说明
@@ -80,6 +90,39 @@ risk-decision-engine/
 - 自测：`test_complex_flow.go`
 - 功能：预加载多数据源（用户、征信、多头）→ 规则过滤 → 模型调用 → 综合决策
 
+### 4. 配置规则服务 - YAML动态加载
+- 配置文件：`test/cases/*/config/rule.yaml`
+- 服务：`cmd/server/config_rule_server.go`
+- 自测：`test_config_rule.go`
+- 功能：从YAML配置文件动态加载规则，支持运行时重载
+
+## 规则配置格式
+
+规则配置使用YAML格式，示例：
+
+```yaml
+rules:
+  - ruleId: "R001"
+    name: "年龄准入规则"
+    priority: 100
+    status: "ACTIVE"
+    condition:
+      operator: "AND"
+      expressions:
+        - field: "age"
+          operator: ">="
+          value: 21
+        - field: "age"
+          operator: "<="
+          value: 60
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "年龄不符合要求"
+```
+
 ## 快速开始
 
 ### 运行简单用例服务
@@ -100,6 +143,12 @@ go run cmd/server/medium_use_case_server.go
 go run cmd/server/complex_use_case_server.go
 ```
 
+### 运行配置规则服务（YAML动态加载）
+
+```bash
+go run cmd/server/config_rule_server.go
+```
+
 ### 运行自测
 
 ```bash
@@ -111,6 +160,12 @@ go run test_medium_flow.go
 
 # 复杂用例自测
 go run test_complex_flow.go
+
+# 规则配置加载自测
+go run test_config_rule.go
+
+# 决策流配置加载自测
+go run test_flow_config.go
 ```
 
 ## API 接口
@@ -144,6 +199,7 @@ Content-Type: application/json
 - `SimpleRule` - 简单规则定义
 - 内置规则：年龄规则、收入规则、黑名单规则、多头查询规则
 - 支持 expr 表达式语法
+- `config.go` - YAML规则配置文件加载器，支持动态加载和运行时重载
 
 ### 模型客户端 (`internal/engine/model/`)
 - `ModelService` - 模型服务接口
@@ -176,6 +232,10 @@ Content-Type: application/json
 - ✅ 简单用例完成
 - ✅ 中等用例完成
 - ✅ 复杂用例完成
+- ✅ 规则配置文件加载（YAML动态加载）
+- ✅ 配置管理 (Viper)
+- ✅ 日志系统 (Zap)
+- ✅ 决策流配置文件加载
 
 ## 开发计划
 
