@@ -1,0 +1,79 @@
+# 数据源配置
+datasources:
+  - dsId: "DS001"
+    name: "本地用户表"
+    description: "从本地数据库获取用户基本信息"
+    type: "HTTP"
+    status: "ACTIVE"
+
+    config:
+      url: "http://local-user-service/api/v1/user/info"
+      method: "POST"
+      timeout: "1s"
+
+      headers:
+        Content-Type: "application/json"
+
+      inputMapping:
+        idCard: "${input.applicant.idCard}"
+        phone: "${input.applicant.phone}"
+
+      outputMapping:
+        userId: "${data.user_id}"
+        isBlacklist: "${data.is_blacklist}"
+        registerDate: "${data.register_date}"
+        historyApplyCount: "${data.history_apply_count}"
+        historyOverdueCount: "${data.history_overdue_count}"
+
+  - dsId: "DS002"
+    name: "征信数据"
+    description: "查询央行征信数据"
+    type: "HTTP"
+    status: "ACTIVE"
+
+    config:
+      url: "http://credit-service/api/v1/credit/query"
+      method: "POST"
+      timeout: "2s"
+
+      headers:
+        Content-Type: "application/json"
+        X-API-Key: "credit-api-key"
+
+      inputMapping:
+        idCard: "${input.applicant.idCard}"
+        name: "${input.applicant.name}"
+
+      outputMapping:
+        queryCount1M: "${data.query_count_1m}"
+        queryCount3M: "${data.query_count_3m}"
+        hasOverdue: "${data.has_overdue}"
+        overdueCount2Y: "${data.overdue_count_2y}"
+        totalLoanCount: "${data.total_loan_count}"
+
+  - dsId: "DS003"
+    name: "多头借贷查询"
+    description: "查询第三方多头数据"
+    type: "HTTP"
+    status: "ACTIVE"
+
+    config:
+      url: "http://multi-loan-service/api/v1/multi/query"
+      method: "POST"
+      timeout: "1.5s"
+
+      headers:
+        Content-Type: "application/json"
+        X-API-Key: "multi-api-key"
+
+      inputMapping:
+        idCard: "${input.applicant.idCard}"
+        phone: "${input.applicant.phone}"
+        contractId: "${contractId}"
+
+      outputMapping:
+        loanCount7D: "${data.loan_count_7d}"
+        loanCount30D: "${data.loan_count_30d}"
+        rejectCount7D: "${data.reject_count_7d}"
+        approveCount7D: "${data.approve_count_7d}"
+        multiScore: "${data.multi_score}"

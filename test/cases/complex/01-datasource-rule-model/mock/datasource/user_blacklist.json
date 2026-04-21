@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "user_id": "U654321",
+    "is_blacklist": true,
+    "register_date": "2021-03-20",
+    "history_apply_count": 10,
+    "history_overdue_count": 5
+  }
+}

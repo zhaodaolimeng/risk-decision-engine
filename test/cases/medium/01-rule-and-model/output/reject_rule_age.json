@@ -1,0 +1,24 @@
+{
+  "code": "0000",
+  "message": "成功",
+  "requestId": "req_medium_004",
+  "data": {
+    "decisionId": "dec_xxxxxxxx",
+    "businessId": "biz_medium_004",
+    "decision": "REJECT",
+    "decisionCode": "REJECT_R001",
+    "decisionReason": "年龄不符合要求，需在21-60岁之间",
+    "executeDetail": {
+      "ruleResults": [
+        {
+          "ruleId": "R001",
+          "ruleName": "年龄准入规则",
+          "result": "REJECT",
+          "reason": "年龄不符合要求，需在21-60岁之间",
+          "pass": false
+        }
+      ]
+    },
+    "executeTime": 30
+  }
+}

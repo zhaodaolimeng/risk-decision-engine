@@ -1,0 +1,11 @@
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "loan_count_7d": 1,
+    "loan_count_30d": 3,
+    "reject_count_7d": 0,
+    "approve_count_7d": 1,
+    "multi_score": 85
+  }
+}

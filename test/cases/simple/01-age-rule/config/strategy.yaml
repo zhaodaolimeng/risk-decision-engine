@@ -1,0 +1,10 @@
+# 策略配置
+strategy:
+  strategyId: "S001"
+  version: "1.0"
+  name: "年龄准入策略"
+  description: "仅检查年龄的简单策略"
+  productId: "P001"
+  flowId: "F001"
+  flowVersion: "1.0"
+  status: "ACTIVE"

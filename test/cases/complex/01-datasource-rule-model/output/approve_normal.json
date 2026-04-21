@@ -1,0 +1,89 @@
+{
+  "code": "0000",
+  "message": "成功",
+  "requestId": "req_complex_001",
+  "data": {
+    "decisionId": "dec_xxxxxxxx",
+    "businessId": "biz_complex_001",
+    "contractId": "CTR_COMPLEX_001",
+    "decision": "APPROVE",
+    "decisionCode": "APPROVE_001",
+    "decisionReason": "综合评分良好",
+    "approvalAmount": 200000,
+    "approvalTerm": 24,
+    "riskScore": 760,
+    "riskLevel": "LOW",
+    "modelResults": {
+      "M001": {
+        "success": true,
+        "output": {
+          "defaultProbability": 0.02,
+          "riskScore": 760,
+          "riskLevel": "LOW",
+          "featureImportance": {
+            "income": 0.35,
+            "credit_query": 0.25,
+            "multi_loan": 0.2,
+            "history": 0.2
+          }
+        },
+        "executeTimeMs": 150
+      }
+    },
+    "executeDetail": {
+      "preloadResults": [
+        {
+          "dsId": "DS001",
+          "success": true,
+          "executeTimeMs": 80
+        },
+        {
+          "dsId": "DS002",
+          "success": true,
+          "executeTimeMs": 120
+        },
+        {
+          "dsId": "DS003",
+          "success": true,
+          "executeTimeMs": 100
+        }
+      ],
+      "ruleResults": [
+        {
+          "ruleId": "R001",
+          "ruleName": "黑名单规则",
+          "result": "PASS",
+          "pass": true
+        },
+        {
+          "ruleId": "R002",
+          "ruleName": "年龄准入规则",
+          "result": "PASS",
+          "pass": true
+        },
+        {
+          "ruleId": "R003",
+          "ruleName": "多头查询规则",
+          "result": "PASS",
+          "pass": true
+        }
+      ],
+      "contextData": {
+        "DS001": {
+          "userId": "U123456",
+          "isBlacklist": false,
+          "historyApplyCount": 5
+        },
+        "DS002": {
+          "queryCount3M": 5,
+          "hasOverdue": false
+        },
+        "DS003": {
+          "rejectCount7D": 0,
+          "multiScore": 85
+        }
+      }
+    },
+    "executeTime": 450
+  }
+}

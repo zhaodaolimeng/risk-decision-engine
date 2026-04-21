@@ -1,0 +1,47 @@
+# 用例 01: 规则 + 模型联合决策
+name: "规则+模型联合决策"
+description: "先过规则（年龄、收入），再调用模型，根据模型分判断"
+complexity: "medium"
+category: "rule+model"
+
+tags:
+  - "规则"
+  - "模型"
+  - "联合决策"
+
+setup:
+  - "配置规则 R001: 年龄准入 (21-60岁)"
+  - "配置规则 R002: 收入准入 (月收入 >= 5000)"
+  - "配置模型 M001: 违约预测模型"
+  - "配置决策流 F001: 规则 -> 模型 -> 决策"
+
+mocks:
+  - type: "model"
+    modelId: "M001"
+    url: "/mock/model/M001"
+
+cases:
+  - name: "规则通过 + 模型低分 -> 通过"
+    input: "input/approve_low_risk.json"
+    expected: "output/approve_low_risk.json"
+    mocks:
+      - modelId: "M001"
+        response: "mock/model/low_risk_response.json"
+
+  - name: "规则通过 + 模型中分 -> 人工复核"
+    input: "input/manual_medium_risk.json"
+    expected: "output/manual_medium_risk.json"
+    mocks:
+      - modelId: "M001"
+        response: "mock/model/medium_risk_response.json"
+
+  - name: "规则通过 + 模型高分 -> 拒绝"
+    input: "input/reject_high_risk.json"
+    expected: "output/reject_high_risk.json"
+    mocks:
+      - modelId: "M001"
+        response: "mock/model/high_risk_response.json"
+
+  - name: "年龄规则拒绝"
+    input: "input/reject_rule_age.json"
+    expected: "output/reject_rule_age.json"

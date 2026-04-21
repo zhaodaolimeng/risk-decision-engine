@@ -1,0 +1,83 @@
+# 用例 01: 数据源 + 规则 + 模型 完整流程
+name: "完整流程（数据源+规则+模型）"
+description: "预加载数据源（征信、多头），规则过滤，调用模型（含合同ID+上下文数据），综合决策"
+complexity: "complex"
+category: "datasource+rule+model"
+
+tags:
+  - "数据源"
+  - "预加载"
+  - "多头数据"
+  - "黑名单"
+  - "完整流程"
+
+setup:
+  - "配置数据源 DS001: 本地用户表（获取用户基本信息）"
+  - "配置数据源 DS002: 征信数据查询"
+  - "配置数据源 DS003: 多头借贷查询"
+  - "配置规则 R001: 黑名单规则"
+  - "配置规则 R002: 年龄准入规则"
+  - "配置规则 R003: 多头查询规则（近7天>3次拒绝）"
+  - "配置模型 M001: 违约预测模型（需contractId + 上下文数据）"
+  - "配置决策流 F001: 数据源预加载 -> 规则 -> 模型 -> 决策"
+
+mocks:
+  - type: "datasource"
+    dsId: "DS001"
+    url: "/mock/datasource/DS001"
+  - type: "datasource"
+    dsId: "DS002"
+    url: "/mock/datasource/DS002"
+  - type: "datasource"
+    dsId: "DS003"
+    url: "/mock/datasource/DS003"
+  - type: "model"
+    modelId: "M001"
+    url: "/mock/model/M001"
+
+cases:
+  - name: "黑名单用户 - 直接拒绝"
+    input: "input/reject_blacklist.json"
+    expected: "output/reject_blacklist.json"
+    mocks:
+      - dsId: "DS001"
+        response: "mock/datasource/user_blacklist.json"
+
+  - name: "正常用户 + 低多头 + 模型低风险 - 通过"
+    input: "input/approve_normal.json"
+    expected: "output/approve_normal.json"
+    mocks:
+      - dsId: "DS001"
+        response: "mock/datasource/user_normal.json"
+      - dsId: "DS002"
+        response: "mock/datasource/credit_good.json"
+      - dsId: "DS003"
+        response: "mock/datasource/multi_low.json"
+      - modelId: "M001"
+        response: "mock/model/low_risk_response.json"
+
+  - name: "高多头 + 模型中风险 - 人工复核"
+    input: "input/manual_high_multi.json"
+    expected: "output/manual_high_multi.json"
+    mocks:
+      - dsId: "DS001"
+        response: "mock/datasource/user_normal.json"
+      - dsId: "DS002"
+        response: "mock/datasource/credit_good.json"
+      - dsId: "DS003"
+        response: "mock/datasource/multi_high.json"
+      - modelId: "M001"
+        response: "mock/model/medium_risk_response.json"
+
+  - name: "征信不良 + 模型高风险 - 拒绝"
+    input: "input/reject_bad_credit.json"
+    expected: "output/reject_bad_credit.json"
+    mocks:
+      - dsId: "DS001"
+        response: "mock/datasource/user_normal.json"
+      - dsId: "DS002"
+        response: "mock/datasource/credit_bad.json"
+      - dsId: "DS003"
+        response: "mock/datasource/multi_medium.json"
+      - modelId: "M001"
+        response: "mock/model/high_risk_response.json"

@@ -1,0 +1,71 @@
+# 规则配置
+rules:
+  - ruleId: "R001"
+    version: "1.0"
+    name: "黑名单规则"
+    description: "黑名单用户直接拒绝"
+    type: "BOOLEAN"
+    priority: 200
+    status: "ACTIVE"
+
+    condition:
+      field: "DS001.isBlacklist"
+      operator: "=="
+      value: false
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "用户在黑名单中"
+
+  - ruleId: "R002"
+    version: "1.0"
+    name: "年龄准入规则"
+    description: "申请人年龄必须在21-60岁之间"
+    type: "BOOLEAN"
+    priority: 100
+    status: "ACTIVE"
+
+    condition:
+      operator: "AND"
+      expressions:
+        - field: "input.applicant.age"
+          operator: ">="
+          value: 21
+        - field: "input.applicant.age"
+          operator: "<="
+          value: 60
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "年龄不符合要求，需在21-60岁之间"
+
+  - ruleId: "R003"
+    version: "1.0"
+    name: "多头查询规则"
+    description: "近7天拒绝次数>3次或多头评分<50分，拒绝"
+    type: "BOOLEAN"
+    priority: 90
+    status: "ACTIVE"
+
+    condition:
+      operator: "AND"
+      expressions:
+        - field: "DS003.rejectCount7D"
+          operator: "<="
+          value: 3
+        - field: "DS003.multiScore"
+          operator: ">="
+          value: 50
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "多头查询异常"

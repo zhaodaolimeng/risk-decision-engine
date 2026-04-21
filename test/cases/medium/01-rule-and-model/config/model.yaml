@@ -1,0 +1,36 @@
+# 模型配置
+models:
+  - modelId: "M001"
+    version: "1.0"
+    name: "违约预测模型"
+    description: "预测用户违约概率"
+    type: "HTTP"
+    status: "ACTIVE"
+
+    config:
+      url: "http://mock-model-service/api/v1/predict/default"
+      method: "POST"
+      timeout: "2s"
+
+      headers:
+        Content-Type: "application/json"
+        X-API-Key: "test-api-key"
+
+      inputMapping:
+        contract_id: "${contractId}"
+        applicant:
+          age: "${input.applicant.age}"
+          income: "${input.applicant.monthlyIncome}"
+          education: "${input.applicant.education}"
+        application:
+          amount: "${input.application.applyAmount}"
+          term: "${input.application.applyTerm}"
+
+      outputMapping:
+        defaultProbability: "${data.default_probability}"
+        riskScore: "${data.risk_score}"
+        riskLevel: "${data.risk_level}"
+
+      retryConfig:
+        maxAttempts: 3
+        retryDelay: "100ms"

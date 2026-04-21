@@ -1,0 +1,42 @@
+{
+  "code": "0000",
+  "message": "成功",
+  "requestId": "req_medium_001",
+  "data": {
+    "decisionId": "dec_xxxxxxxx",
+    "businessId": "biz_medium_001",
+    "decision": "APPROVE",
+    "decisionCode": "APPROVE_001",
+    "decisionReason": "风险评分良好",
+    "riskScore": 750,
+    "riskLevel": "LOW",
+    "modelResults": {
+      "M001": {
+        "success": true,
+        "output": {
+          "defaultProbability": 0.03,
+          "riskScore": 750,
+          "riskLevel": "LOW"
+        },
+        "executeTimeMs": 120
+      }
+    },
+    "executeDetail": {
+      "ruleResults": [
+        {
+          "ruleId": "R001",
+          "ruleName": "年龄准入规则",
+          "result": "PASS",
+          "pass": true
+        },
+        {
+          "ruleId": "R002",
+          "ruleName": "收入准入规则",
+          "result": "PASS",
+          "pass": true
+        }
+      ]
+    },
+    "executeTime": 150
+  }
+}

@@ -1,0 +1,10 @@
+# 策略配置
+strategy:
+  strategyId: "S001"
+  version: "1.0"
+  name: "完整策略（数据源+规则+模型）"
+  description: "完整的信贷审批决策策略"
+  productId: "P001"
+  flowId: "F001"
+  flowVersion: "1.0"
+  status: "ACTIVE"

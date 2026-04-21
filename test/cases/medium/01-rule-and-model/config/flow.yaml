@@ -1,0 +1,56 @@
+# 决策流配置
+flow:
+  flowId: "F001"
+  version: "1.0"
+  name: "规则+模型决策流"
+  description: "先执行规则，再调用模型，最后综合决策"
+  status: "ACTIVE"
+
+  nodes:
+    - nodeId: "START"
+      type: "START"
+
+    - nodeId: "RULE_SET"
+      type: "RULE_SET"
+      ruleIds: ["R001", "R002"]
+
+    - nodeId: "MODEL"
+      type: "MODEL"
+      modelId: "M001"
+      outputToContext: "modelResult"
+
+    - nodeId: "DECISION"
+      type: "DECISION"
+      decisionTable:
+        rules:
+          - condition: "anyRuleReject == true"
+            result: "REJECT"
+            reason: "${firstRejectReason}"
+          - condition: "modelResult.riskScore >= 700"
+            result: "APPROVE"
+            reason: "风险评分良好"
+          - condition: "modelResult.riskScore >= 600 && modelResult.riskScore < 700"
+            result: "MANUAL"
+            reason: "需人工复核"
+          - condition: "modelResult.riskScore < 600"
+            result: "REJECT"
+            reason: "风险评分不足"
+
+    - nodeId: "END"
+      type: "END"
+
+  edges:
+    - from: "START"
+      to: "RULE_SET"
+    - from: "RULE_SET"
+      to: "MODEL"
+      condition: "allRulesPass == true"
+    - from: "RULE_SET"
+      to: "DECISION"
+      condition: "anyRuleReject == true"
+    - from: "MODEL"
+      to: "DECISION"
+    - from: "DECISION"
+      to: "END"
+
+  startNodeId: "START"

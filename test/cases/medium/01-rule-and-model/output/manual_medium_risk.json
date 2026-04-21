@@ -1,0 +1,42 @@
+{
+  "code": "0000",
+  "message": "成功",
+  "requestId": "req_medium_002",
+  "data": {
+    "decisionId": "dec_xxxxxxxx",
+    "businessId": "biz_medium_002",
+    "decision": "MANUAL",
+    "decisionCode": "MANUAL_001",
+    "decisionReason": "需人工复核",
+    "riskScore": 650,
+    "riskLevel": "MEDIUM",
+    "modelResults": {
+      "M001": {
+        "success": true,
+        "output": {
+          "defaultProbability": 0.15,
+          "riskScore": 650,
+          "riskLevel": "MEDIUM"
+        },
+        "executeTimeMs": 115
+      }
+    },
+    "executeDetail": {
+      "ruleResults": [
+        {
+          "ruleId": "R001",
+          "ruleName": "年龄准入规则",
+          "result": "PASS",
+          "pass": true
+        },
+        {
+          "ruleId": "R002",
+          "ruleName": "收入准入规则",
+          "result": "PASS",
+          "pass": true
+        }
+      ]
+    },
+    "executeTime": 145
+  }
+}

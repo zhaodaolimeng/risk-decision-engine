@@ -1,0 +1,39 @@
+# 决策流配置
+flow:
+  flowId: "F001"
+  version: "1.0"
+  name: "年龄准入决策流"
+  description: "仅使用年龄规则的简单决策流"
+  status: "ACTIVE"
+
+  nodes:
+    - nodeId: "START"
+      type: "START"
+
+    - nodeId: "RULE_AGE"
+      type: "RULE_SET"
+      ruleIds: ["R001"]
+
+    - nodeId: "DECISION"
+      type: "DECISION"
+      decisionTable:
+        rules:
+          - condition: "R001 == 'PASS'"
+            result: "APPROVE"
+            reason: "年龄符合要求"
+          - condition: "R001 == 'REJECT'"
+            result: "REJECT"
+            reason: "${R001_reason}"
+
+    - nodeId: "END"
+      type: "END"
+
+  edges:
+    - from: "START"
+      to: "RULE_AGE"
+    - from: "RULE_AGE"
+      to: "DECISION"
+    - from: "DECISION"
+      to: "END"
+
+  startNodeId: "START"

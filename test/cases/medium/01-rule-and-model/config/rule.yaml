@@ -1,0 +1,46 @@
+# 规则配置
+rules:
+  - ruleId: "R001"
+    version: "1.0"
+    name: "年龄准入规则"
+    description: "申请人年龄必须在21-60岁之间"
+    type: "BOOLEAN"
+    priority: 100
+    status: "ACTIVE"
+
+    condition:
+      operator: "AND"
+      expressions:
+        - field: "age"
+          operator: ">="
+          value: 21
+        - field: "age"
+          operator: "<="
+          value: 60
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "年龄不符合要求，需在21-60岁之间"
+
+  - ruleId: "R002"
+    version: "1.0"
+    name: "收入准入规则"
+    description: "月收入必须大于等于5000元"
+    type: "BOOLEAN"
+    priority: 90
+    status: "ACTIVE"
+
+    condition:
+      field: "monthlyIncome"
+      operator: ">="
+      value: 5000
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "收入不足，月收入需 >= 5000元"

@@ -1,0 +1,23 @@
+{
+  "requestId": "req_test_003",
+  "productId": "P001",
+  "strategyId": "S001",
+  "businessId": "biz_test_003",
+  "contractId": "CTR_TEST_003",
+  "data": {
+    "applicant": {
+      "name": "测试用户3",
+      "idCard": "110101196401011234",
+      "phone": "13800138002",
+      "age": 60,
+      "education": "大专",
+      "monthlyIncome": 20000
+    },
+    "application": {
+      "applyAmount": 50000,
+      "applyTerm": 6,
+      "loanPurpose": "消费",
+      "repaymentType": "等额本息"
+    }
+  }
+}

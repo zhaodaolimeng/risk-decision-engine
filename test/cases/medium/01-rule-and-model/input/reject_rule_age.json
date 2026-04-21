@@ -1,0 +1,23 @@
+{
+  "requestId": "req_medium_004",
+  "productId": "P001",
+  "strategyId": "S001",
+  "businessId": "biz_medium_004",
+  "contractId": "CTR_MEDIUM_004",
+  "data": {
+    "applicant": {
+      "name": "规则拒绝用户",
+      "idCard": "110101200601011234",
+      "phone": "13800138003",
+      "age": 18,
+      "education": "高中",
+      "monthlyIncome": 3000
+    },
+    "application": {
+      "applyAmount": 50000,
+      "applyTerm": 12,
+      "loanPurpose": "消费",
+      "repaymentType": "等额本息"
+    }
+  }
+}

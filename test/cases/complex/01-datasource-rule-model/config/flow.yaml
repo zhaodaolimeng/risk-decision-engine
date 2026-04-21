@@ -1,0 +1,64 @@
+# 决策流配置
+flow:
+  flowId: "F001"
+  version: "1.0"
+  name: "完整决策流（数据源+规则+模型）"
+  description: "数据源预加载 -> 规则 -> 模型 -> 综合决策"
+  status: "ACTIVE"
+
+  # 预加载配置（决策开始前执行）
+  preload:
+    datasourceIds: ["DS001", "DS002", "DS003"]
+    parallel: true  # 并行拉取
+    timeout: "3s"
+
+  nodes:
+    - nodeId: "START"
+      type: "START"
+
+    - nodeId: "RULE_SET"
+      type: "RULE_SET"
+      ruleIds: ["R001", "R002", "R003"]
+
+    - nodeId: "MODEL"
+      type: "MODEL"
+      modelId: "M001"
+      outputToContext: "modelResult"
+
+    - nodeId: "DECISION"
+      type: "DECISION"
+      decisionTable:
+        rules:
+          - condition: "anyRuleReject == true"
+            result: "REJECT"
+            reason: "${firstRejectReason}"
+          - condition: "modelResult.riskScore >= 720"
+            result: "APPROVE"
+            reason: "综合评分良好"
+            approvalAmount: "${input.application.applyAmount}"
+            approvalTerm: "${input.application.applyTerm}"
+          - condition: "modelResult.riskScore >= 620 && modelResult.riskScore < 720"
+            result: "MANUAL"
+            reason: "需人工复核"
+          - condition: "modelResult.riskScore < 620"
+            result: "REJECT"
+            reason: "综合评分不足"
+
+    - nodeId: "END"
+      type: "END"
+
+  edges:
+    - from: "START"
+      to: "RULE_SET"
+    - from: "RULE_SET"
+      to: "MODEL"
+      condition: "allRulesPass == true"
+    - from: "RULE_SET"
+      to: "DECISION"
+      condition: "anyRuleReject == true"
+    - from: "MODEL"
+      to: "DECISION"
+    - from: "DECISION"
+      to: "END"
+
+  startNodeId: "START"

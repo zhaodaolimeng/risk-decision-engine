@@ -1,0 +1,18 @@
+{
+  "code": 0,
+  "message": "success",
+  "request_id": "mock_req_complex_001",
+  "data": {
+    "default_probability": 0.02,
+    "risk_score": 760,
+    "risk_level": "LOW",
+    "model_version": "v2.0.0",
+    "inference_time_ms": 150,
+    "feature_importance": {
+      "income": 0.35,
+      "credit_query": 0.25,
+      "multi_loan": 0.2,
+      "history": 0.2
+    }
+  }
+}

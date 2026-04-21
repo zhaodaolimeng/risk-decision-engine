@@ -1,0 +1,34 @@
+# 服务配置
+server:
+  name: risk-decision-engine
+  port: 8080
+  mode: debug  # debug/release
+
+# 日志配置
+log:
+  level: info  # debug/info/warn/error
+  format: json  # json/console
+  outputPath: ./logs/app.log
+
+# MySQL 配置
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: your_username
+  password: your_password
+  database: risk_decision
+  maxOpenConns: 100
+  maxIdleConns: 10
+  connMaxLifetime: 3600  # 秒
+
+# Redis 配置
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  db: 0
+  poolSize: 100
+
+# 策略配置
+strategy:
+  cacheTTL: 300  # 秒

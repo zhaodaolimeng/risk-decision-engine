@@ -1,0 +1,12 @@
+{
+  "code": 0,
+  "message": "success",
+  "request_id": "mock_req_003",
+  "data": {
+    "default_probability": 0.35,
+    "risk_score": 550,
+    "risk_level": "HIGH",
+    "model_version": "v1.0.0",
+    "inference_time_ms": 125
+  }
+}

@@ -1,0 +1,60 @@
+# 模型配置
+models:
+  - modelId: "M001"
+    version: "1.0"
+    name: "违约预测模型（完整版）"
+    description: "综合预测用户违约概率，需要合同ID和上下文数据"
+    type: "HTTP"
+    status: "ACTIVE"
+
+    config:
+      url: "http://model-service/api/v1/predict/full"
+      method: "POST"
+      timeout: "2s"
+
+      headers:
+        Content-Type: "application/json"
+        X-API-Key: "model-full-api-key"
+
+      # 输入映射：使用预加载的上下文数据 + contractId
+      inputMapping:
+        contract_id: "${contractId}"
+        applicant:
+          id_card: "${input.applicant.idCard}"
+          age: "${input.applicant.age}"
+          education: "${input.applicant.education}"
+          income: "${input.applicant.monthlyIncome}"
+        # 来自 DS001 本地用户表
+        user_info:
+          user_id: "${DS001.userId}"
+          register_date: "${DS001.registerDate}"
+          history_apply_count: "${DS001.historyApplyCount}"
+          history_overdue_count: "${DS001.historyOverdueCount}"
+        # 来自 DS002 征信数据
+        credit_info:
+          query_count_1m: "${DS002.queryCount1M}"
+          query_count_3m: "${DS002.queryCount3M}"
+          has_overdue: "${DS002.hasOverdue}"
+          overdue_count_2y: "${DS002.overdueCount2Y}"
+        # 来自 DS003 多头数据
+        multi_info:
+          loan_count_7d: "${DS003.loanCount7D}"
+          loan_count_30d: "${DS003.loanCount30D}"
+          reject_count_7d: "${DS003.rejectCount7D}"
+          multi_score: "${DS003.multiScore}"
+        application:
+          amount: "${input.application.applyAmount}"
+          term: "${input.application.applyTerm}"
+          purpose: "${input.application.loanPurpose}"
+
+      # 输出映射
+      outputMapping:
+        defaultProbability: "${data.default_probability}"
+        riskScore: "${data.risk_score}"
+        riskLevel: "${data.risk_level}"
+        modelVersion: "${data.model_version}"
+        featureImportance: "${data.feature_importance}"
+
+      retryConfig:
+        maxAttempts: 3
+        retryDelay: "100ms"

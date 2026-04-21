@@ -1,0 +1,30 @@
+# 用例 01: 年龄准入规则
+name: "年龄准入规则"
+description: "用户年龄小于21岁拒绝，21-60岁通过"
+complexity: "simple"
+category: "rule"
+
+tags:
+  - "准入规则"
+  - "年龄"
+
+setup:
+  - "配置规则 R001: 年龄准入"
+  - "配置决策流 F001: 单规则决策"
+
+cases:
+  - name: "年龄20岁 - 拒绝"
+    input: "input/reject_age20.json"
+    expected: "output/reject_age20.json"
+
+  - name: "年龄25岁 - 通过"
+    input: "input/approve_age25.json"
+    expected: "output/approve_age25.json"
+
+  - name: "年龄60岁 - 通过"
+    input: "input/approve_age60.json"
+    expected: "output/approve_age60.json"
+
+  - name: "年龄61岁 - 拒绝"
+    input: "input/reject_age61.json"
+    expected: "output/reject_age61.json"
