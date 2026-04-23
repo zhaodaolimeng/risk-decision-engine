@@ -1,0 +1,31 @@
+# 风险决策引擎配置示例
+
+server:
+  name: risk-decision-engine
+  port: 8080
+  mode: release
+
+log:
+  level: info
+  format: json
+  outputPath: ./logs/app.log
+
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  user: root
+  password: root
+  database: risk_decision
+  maxOpenConns: 100
+  maxIdleConns: 10
+  connMaxLifetime: 3600
+
+redis:
+  host: 127.0.0.1
+  port: 6379
+  password: ""
+  db: 0
+  poolSize: 100
+
+strategy:
+  cacheTTL: 300

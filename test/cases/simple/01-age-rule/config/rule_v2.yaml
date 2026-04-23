@@ -1,0 +1,26 @@
+# 规则配置 v2 - 降低年龄门槛
+rules:
+  - ruleId: "R001"
+    version: "2.0"
+    name: "年龄准入规则"
+    description: "申请人年龄必须在18-65岁之间"
+    type: "BOOLEAN"
+    priority: 100
+    status: "ACTIVE"
+
+    condition:
+      operator: "AND"
+      expressions:
+        - field: "age"
+          operator: ">="
+          value: 18
+        - field: "age"
+          operator: "<="
+          value: 65
+
+    actions:
+      true:
+        result: "PASS"
+      false:
+        result: "REJECT"
+        reason: "年龄不符合要求，需在18-65岁之间"

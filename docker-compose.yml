@@ -1,0 +1,74 @@
+services:
+  # 风险决策引擎 - 沙盒服务
+  risk-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: risk-decision-engine
+    ports:
+      - "8080:8080"
+    volumes:
+      # 挂载sandbox records目录，持久化流量记录
+      - sandbox-records:/app/sandbox/records
+      # 可选：挂载外部配置目录
+      # - ./config:/app/config:ro
+    environment:
+      - TZ=Asia/Shanghai
+      - GIN_MODE=release
+    networks:
+      - risk-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  # 可选：MySQL数据库（为后续功能预留）
+  mysql:
+    image: mysql:8.0
+    container_name: risk-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=risk123456
+      - MYSQL_DATABASE=risk_decision
+      - MYSQL_USER=risk
+      - MYSQL_PASSWORD=risk123456
+      - TZ=Asia/Shanghai
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - risk-network
+    restart: unless-stopped
+    profiles:
+      - mysql
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+
+  # 可选：Redis缓存（为后续功能预留）
+  redis:
+    image: redis:7-alpine
+    container_name: risk-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - risk-network
+    restart: unless-stopped
+    profiles:
+      - redis
+    command: redis-server --appendonly yes
+
+volumes:
+  sandbox-records:
+    driver: local
+  mysql-data:
+    driver: local
+  redis-data:
+    driver: local
+
+networks:
+  risk-network:
+    driver: bridge

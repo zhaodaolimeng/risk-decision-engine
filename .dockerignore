@@ -1,0 +1,41 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go
+vendor/
+go.work
+go.work.sum
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+
+# Sandbox records (don't copy into image)
+sandbox/records/*.json
+
+# Test files
+test/*.go
+test/*.txt
+
+# Temp files
+*.tmp
+*.log
+*.md~
+TODO.md
